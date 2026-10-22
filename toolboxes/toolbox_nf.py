@@ -4,37 +4,15 @@ import numpy as np
 import matplotlib as mpl
 mpl.use("TkAgg")
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as grid
-import matplotlib.patches as mpatches
-import seaborn as sns
-import math
-import re
-import copy
-import ast
 import os
 import pandas as pd
 import h5py
-import colorcet as cc
-import warnings
 import scipy
-import skimage
-import toolboxes.epi_slowwave_toolbox as epi
-from PIL import Image
-from scipy import ndimage, signal
-from scipy.signal import wiener, vectorstrength, find_peaks
-from scipy.stats import circstd, circvar, linregress, kruskal, mannwhitneyu, false_discovery_control
-from scipy.optimize import curve_fit
-from matplotlib.patches import FancyArrowPatch
-from skimage import morphology, measure, filters, io
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from statsmodels.stats.proportion import proportions_ztest, proportion_effectsize
-from colorama import Fore
-from collections import OrderedDict
+from skimage import io
 import upsetplot as upset
 
-
 # function for saving data as HDF5 (stolen from David)
-def save_hdf5(self, list_of_data_arrays, list_of_labels, new_directory: str, export_path: str, permission='a'):
+def save_hdf5(list_of_data_arrays, list_of_labels, new_directory: str, export_path: str, permission='a'):
   print('save data to ' + export_path)
   permission = permission
   with h5py.File(export_path, permission) as f:
@@ -43,7 +21,7 @@ def save_hdf5(self, list_of_data_arrays, list_of_labels, new_directory: str, exp
           gr[list_of_labels[i]] = list_of_data_arrays[i]
 
 # function to load an HDF5 file (stolen from David)
-def load_hdf5(self, import_path: str):
+def load_hdf5(import_path: str):
   print('load from HDF5...')
   data_dict = {}
   f = h5py.File(import_path, 'r')
@@ -61,7 +39,7 @@ def load_hdf5(self, import_path: str):
   return data_dict
 
 # load tif files
-def read_tif(self, path: str):
+def read_tif(path: str):
   print("load tiff: " + path)
   img = io.imread(path)
   return np.array(img)
