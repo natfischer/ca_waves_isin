@@ -50,13 +50,28 @@ print(group_all)
 
 #death_data_wketamin.shape -> (25,15) = 25 Reihen , 15 Spalten
 
-#Jz nur recording 1 herausfiltern
+#Jz nur rec 1 und dead_next_day von rec1 herausfiltern
+import pandas as pd
+death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
+rec1 = death_data_wketamin[death_data_wketamin["recording"] == 1] #prüft jede Zeile ob es 1 ist. Äußerste ddwk = behalte die Zeilen,die True ist
+print(rec1)
+
+#Mortalitätsrate von rec1
+mort_rate_rec1 = rec1["dead_next_day"].mean()*100
+print(mort_rate_rec1)
+
+#Loopen
 import pandas as pd
 death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
 
-for i in range(len(death_data_wketamin)):
-    recording = recording[i]
-    data = death_data_wketamin[recording]
+recording =
+for i in range(len(recording)): #len zählt wie viele unterschiedliche rec
+    rec = recording.iloc[i] #greift aufs element position i
+    data = death_data_wketamin[death_data_wketamin["recording"] == rec]
+    mortality = data["dead_next_day"].mean()*100
+    print(rec,mortality) # Als Ergebnis kommt 5 mal das gleiche raus für jedes Recording??
+
+
 
 
 
