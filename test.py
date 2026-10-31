@@ -38,5 +38,26 @@ print(death_data_woketamin.head())
 Auswahl = death_data_wketamin[["recording" , "dead_next_day"]]
 print(Auswahl)
 
-print(death_data_wketamin.iloc[:, 1])
+print(death_data_wketamin.iloc[:, 0]) # Alle Reihen aber mit bestimmter Spalte
 
+#len() function returns the number of elements in the list.
+
+#Hab zufälligerweise mean-wert von allen Recordings berechnet
+import pandas as pd
+death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
+group_all = death_data_wketamin.groupby("recording")["dead_next_day"].mean()*100
+print(group_all)
+
+#death_data_wketamin.shape -> (25,15) = 25 Reihen , 15 Spalten
+
+#Jz nur recording 1 herausfiltern
+import pandas as pd
+death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
+
+for i in range(len(death_data_wketamin)):
+    recording = recording[i]
+    data = death_data_wketamin[recording]
+
+
+
+death_data_wketamin[death_data_wketamin['recording'] == '1']
