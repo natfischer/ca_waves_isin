@@ -48,31 +48,60 @@ death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv"
 group_all = death_data_wketamin.groupby("recording")["dead_next_day"].mean()*100
 print(group_all)
 
-#death_data_wketamin.shape -> (25,15) = 25 Reihen , 15 Spalten
 
-#Jz nur rec 1 und dead_next_day von rec1 herausfiltern
-import pandas as pd
-death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
-rec1 = death_data_wketamin[death_data_wketamin["recording"] == 1] #prüft jede Zeile ob es 1 ist. Äußerste ddwk = behalte die Zeilen,die True ist
-print(rec1)
+#death_data_wketamin.shape -> (25,15) = 25 Reihen , 15 Spalten
 
 #Mortalitätsrate von rec1
 mort_rate_rec1 = rec1["dead_next_day"].mean()*100
 print(mort_rate_rec1)
 
+#death_data_wketamin[death_data_wketamin['recording'] == '1']
+
 #Loopen
 import pandas as pd
+import matplotlib.pyplot as plt
 death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
 
-recording =
+recording = death_data_wketamin["recording"]
 for i in range(len(recording)): #len zählt wie viele unterschiedliche rec
     rec = recording.iloc[i] #greift aufs element position i
-    data = death_data_wketamin[death_data_wketamin["recording"] == rec]
-    mortality = data["dead_next_day"].mean()*100
-    print(rec,mortality) # Als Ergebnis kommt 5 mal das gleiche raus für jedes Recording??
+    data = death_data_wketamin[death_data_wketamin["recording"] == rec] # behält die zeilen, die True ist
+    mortality =data["dead_next_day"].mean()*100
+    print(rec,mortality)
 
+#Boxplot
+fig, axs = plt.subplots()
+ax.boxplot(...)
 
+ax.set.xlabel("")
+ax.set.ylabel("")
+plt.show()
 
+# Boxplot nur Ketamin
+import pandas as pd
+import matplotlib.pyplot as plt
+death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
+group_all = death_data_wketamin.groupby("recording")["dead_next_day"].mean()*100
+print(group_all)
 
+plt.boxplot(group_all)
+plt.title('Mortalityrate with Ketamin')
+plt.ylabel('Mortalityrate %')
+plt.xlabel('Recordings')
+plt.show()
 
-death_data_wketamin[death_data_wketamin['recording'] == '1']
+# Boxplot w.Ketamin and wo.Ketamin next to each other
+import pandas as pd
+import matplotlib.pyplot as plt
+
+death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
+death_data_woketamin =pd.read_csv("A:\\shared\\iyorulmaz\\screening_results_von_Natalie.csv" , delimiter=';')
+group_keta = death_data_wketamin.groupby("recording")["dead_next_day"].mean()*100
+group_noketa = death_data_woketamin.groupby("recording")["dead_next_day"].mean()*100
+print(group_all)
+print(group_all1)
+
+plt.boxplot([group_keta, group_noketa], tick_labels = ['with Ketamin', 'without Ketamin'])
+plt.title('Mortality rate with Ketamin and without Ketamin')
+plt.ylabel('Mortality rate %')
+plt.show()
