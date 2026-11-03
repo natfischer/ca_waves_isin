@@ -9,7 +9,7 @@ import h5py
 
 data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec1_with_Ketamin\\"
 
-file_name = "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif"
+file_name = "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif"
 
 # load single fish
 
@@ -17,10 +17,10 @@ rec = nf.read_tif(data_path + file_name)
 
 mean_trace = np.zeros((900, 1)) #2D-Array (900 Zeile, 1 Spalte)
 
-for i in range(rec.shape[0]):
+for i in range(rec.shape[0]): #rec.shape = gibt die Anzahl der Zeilen zurück = "900", range(900) = erzeugt Zahlen von 0 bis 899
     mean_trace[i] = np.mean(rec[i])
 
-fig, axs = plt.subplots()
+fig, axs = plt.subplots() #mehrere Diagramme in einer Abbildung darstellen
 axs.plot(mean_trace)
 plt.show()
 
@@ -98,10 +98,36 @@ death_data_wketamin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv"
 death_data_woketamin =pd.read_csv("A:\\shared\\iyorulmaz\\screening_results_von_Natalie.csv" , delimiter=';')
 group_keta = death_data_wketamin.groupby("recording")["dead_next_day"].mean()*100
 group_noketa = death_data_woketamin.groupby("recording")["dead_next_day"].mean()*100
-print(group_all)
-print(group_all1)
+print(group_keta)
+print(group_noketa)
 
 plt.boxplot([group_keta, group_noketa], tick_labels = ['with Ketamin', 'without Ketamin'])
 plt.title('Mortality rate with Ketamin and without Ketamin')
 plt.ylabel('Mortality rate %')
+plt.show()
+
+import toolboxes.toolbox_nf as nf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import scipy
+import h5py
+
+#mean trace
+
+data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec1_with_Ketamin\\"
+
+file_name = "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif"
+
+# load single fish
+
+rec = nf.read_tif(data_path + file_name)
+
+mean_trace = np.zeros((900, 1)) #2D-Array (900 Zeile, 1 Spalte)
+
+for i in range(rec.shape[0]): #rec.shape = gibt die Anzahl der Zeilen zurück = "900", range(900) = erzeugt Zahlen von 0 bis 899
+    mean_trace[i] = np.mean(rec[i])
+
+fig, axs = plt.subplots() #mehrere Diagramme in einer Abbildung darstellen
+axs.plot(mean_trace) #stellt die Werte als Graph dar
 plt.show()
