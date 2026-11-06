@@ -101,9 +101,9 @@ group_noketa = death_data_woketamin.groupby("recording")["dead_next_day"].mean()
 print(group_keta)
 print(group_noketa)
 
-plt.boxplot([group_keta, group_noketa], tick_labels = ['with Ketamin', 'without Ketamin'])
-plt.title('Mortality rate with Ketamin and without Ketamin')
-plt.ylabel('Mortality rate %')
+plt.boxplot([group_keta, group_noketa], tick_labels = ['with Ketamin', 'Control'])
+plt.title('Mortality rate with and without Ketamin')
+plt.ylabel('Mortality [%]')
 plt.show()
 
 #mean trace
