@@ -104,7 +104,7 @@ print(group_noketa)
 plt.boxplot([group_keta, group_noketa], tick_labels = ['with Ketamin', 'Control'])
 plt.title('Mortality rate with and without Ketamin')
 plt.ylabel('Mortality [%]')
-plt.show()
+plt.show()   # wie viele aufnahmen   LARA UNd meine daten nebeneinader ? signifikant? statistischer test welcher? anhand mortalitätsrate
 
 #mean trace
 #load single fish
@@ -115,13 +115,13 @@ import pandas as pd
 import scipy
 import h5py
 
-data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec3_with_Ketamin\\"
-fiile_name = "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif"
+data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec2_with_Ketamin\\"
+fiile_name = "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
 reec = nf.read_tif(data_path + fiile_name)
 
 mean_trace = []
 for im in reec:
-    mean_trace.append(im.mean())
+    mean_trace.append(np.mean(im))
 
 plt.figure()
 plt.plot(mean_trace)
@@ -137,14 +137,14 @@ import pandas as pd
 import scipy
 import h5py
 
-data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec1_with_Ketamin\\"
-file_names = ["rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
-             "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
-             "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
-             "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
-             "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"]
+data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec8_with_Ketamin\\"
+file_names = ["rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+             "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+             "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+             "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+             "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"]
 
-fs = 0.25 #[Hz] [fps] frame per second
+fs = 0.25 #[Hz] [fps] frame per second 900/3600 = 0,25 # sampling frequency # Alle 4 Sekunden ein Bild gemacht
 mean_traces = []
 
 for file in file_names:
@@ -160,34 +160,12 @@ t = np.linspace(0, rec.shape[0]/fs,rec.shape[0]) / 60
 
 plt.figure()
 for trace, rec in zip(mean_traces, file_names):
-    plt.plot(t, trace, label=rec)
+    plt.plot(t, trace, label=rec) # fluo-werte gegen zeit
 plt.xlabel('time [min]')
-plt.ylabel('mean fluorescence [a.u.]')
+plt.ylabel('mean fluorescence [a.u.]') #arbitrary units
 plt.legend()
-plt.show(block=True)
-
-
-#load single fish
-import toolboxes.toolbox_nf as nf
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import scipy
-import h5py
-
-data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec3_with_Ketamin\\"
-fiile_name = "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif"
-reec = nf.read_tif(data_path + fiile_name)
-
-mean_trace = []
-for im in reec:
-    mean_trace.append(im.mean())
-
-plt.figure()
-plt.plot(mean_trace)
-plt.xlabel('Frames')
-plt.ylabel('mean fluorescence [a.u.]')
 plt.show()
+
 
 #mean_trace = np.zeros((900, 1)) #2D-Array (900 Zeile, 1 Spalte) Gibt ein neues Array der angegebenen Form und des angegebenen Typs zurück, das mit Nullen gefüllt ist.
 
@@ -236,5 +214,18 @@ plt.ylabel('Mean fluorescence [a.u.]')
 plt.legend()
 plt.show()
 
+#Boxplot mine and Lara next to each other
+import pandas as pd
+import matplotlib.pyplot as plt
 
+death_data_isin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
+death_data_lara =pd.read_csv("A:\\shared\\iyorulmaz\\from_natalie\\lara_ullmann_recordings\\ketamine_shock_screening_results.csv" , delimiter=';')
+group_isin= death_data_isin.groupby("recording")["dead_next_day"].mean()*100
+group_lara = death_data_lara.groupby("recording")["dead_next_day"].mean()*100
+print(group_isin)
+print(group_lara)
 
+plt.boxplot([group_isin, group_lara], tick_labels = ['Isins Data with Ketamin', 'Laras Data with Ketamin'])
+plt.title('Mortality rate with Ketamin')
+plt.ylabel('Mortality [%]')
+plt.show()
