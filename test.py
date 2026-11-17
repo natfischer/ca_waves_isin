@@ -5,6 +5,8 @@ import pandas as pd
 import scipy
 import h5py
 
+from my_anaylsis import death_data
+
 #mean trace
 
 data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\single_fish_rec1_with_Ketamin\\"
@@ -228,4 +230,221 @@ print(group_lara)
 plt.boxplot([group_isin, group_lara], tick_labels = ['Isins Data with Ketamin', 'Laras Data with Ketamin'])
 plt.title('Mortality rate with Ketamin')
 plt.ylabel('Mortality [%]')
+plt.show()
+
+#Boxplot Natalies, meine, laras nebeneinander
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+death_data_natalie = pd.read_csv("A:\\shared\\iyorulmaz\\screening_results_von_Natalie.csv", delimiter=';')
+death_data_isin = pd.read_csv("A:\\shared\\iyorulmaz\\Isins_Excel_Chart.csv", delimiter=';')
+death_data_lara =pd.read_csv("A:\\shared\\iyorulmaz\\from_natalie\\lara_ullmann_recordings\\ketamine_shock_screening_results.csv" , delimiter=';')
+group_natalie = death_data_natalie.groupby("recording")["dead_next_day"].mean()*100
+group_isin= death_data_isin.groupby("recording")["dead_next_day"].mean()*100
+group_lara = death_data_lara.groupby("recording")["dead_next_day"].mean()*100
+
+print(group_natalie)
+print(group_isin)
+print(group_lara)
+
+plt.boxplot([group_natalie, group_isin, group_lara], tick_labels = ['Control Group (n = 6)', 'Isins Data with Ketamin (n = 11)', 'Laras Data with Ketamin (n = 6)'])
+plt.title('Mortality rate')
+plt.ylabel('Mortality [%]')
+plt.show()
+
+#load multiple fish
+import toolboxes.toolbox_nf as nf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import scipy
+import h5py
+
+data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\Testordner_python\\"
+file_names = ["rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+             "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+             "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+             "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+             "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+              "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+              "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+              "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif",
+              "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+              "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+              "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+              "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif",
+              "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+              "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+              "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+              "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+              "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"]
+
+fs = 0.25 #[Hz] [fps] frame per second 900/3600 = 0,25 # sampling frequency # Alle 4 Sekunden ein Bild gemacht
+mean_traces = []
+
+for file in file_names:
+
+    rec = nf.read_tif(data_path + file)
+    mean_trace = []
+    for im in rec:
+        mean_trace.append(np.mean(im))
+
+    mean_traces.append(np.array(mean_trace))
+
+t = np.linspace(0, rec.shape[0]/fs,rec.shape[0]) / 60
+
+plt.figure()
+for trace, rec in zip(mean_traces, file_names):
+    plt.plot(t, trace, label=rec) # fluo-werte gegen zeit
+plt.xlabel('time [min]')
+plt.ylabel('mean fluorescence [a.u.]') #arbitrary units
+plt.legend()
+plt.show()
+
+#BULLSHIT
+import toolboxes.toolbox_nf as nf
+import matplotlib.pyplot as plt
+import numpy as np
+
+data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\single_fish\\Testordner_python\\"
+
+recordings ={
+    "Recording 1": [
+        "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec1_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif"
+    ],
+
+    "Recording 2": [
+        "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+        "rec2_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+
+    "Recording 3": [
+        "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec3_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+
+    "Recording 4": [
+        "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+        "rec4_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+    "Recording 5": [
+        "rec5_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec5_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec5_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+        "rec5_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+    "Recording 6": [
+        "rec6_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec6_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec6_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec6_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+        "rec6_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+    "Recording 7": [
+        "rec7_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec7_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec7_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec7_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+        "rec7_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+    "Recording 8": [
+        "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec8_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+    "Recording 9": [
+        "rec9_4_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec9_4_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec9_4_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif"
+    ],
+    "Recording 10": [
+        "rec10_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif",
+        "rec10_5_fish_50Vcm_4s_withketamine_2p5mm_fish4.tif",
+        "rec10_5_fish_50Vcm_4s_withketamine_2p5mm_fish5.tif"
+    ],
+    "Recording 11": [
+        "rec11_5_fish_50Vcm_4s_withketamine_2p5mm_fish1.tif",
+        "rec11_5_fish_50Vcm_4s_withketamine_2p5mm_fish2.tif",
+        "rec11_5_fish_50Vcm_4s_withketamine_2p5mm_fish3.tif"]
+}
+
+fs = 0.25
+
+average_traces = {}
+
+for recording, files in recordings.items(): #wird items() verwendet, um alle Schlüssel-Wert-Paare aus einem Wörterbuch abzurufen.
+
+    mean_traces = []
+    average_trace = ()
+
+    for file in files:
+
+        rec = nf.read_tif(data_path + file)
+
+        mean_trace = []
+
+        for im in rec:
+            mean_trace.append(np.mean(im))
+
+        mean_traces.append(np.array(mean_trace))
+
+    mean_traces = np.array(mean_traces)
+
+    # Average across fish
+    average_trace = np.mean(mean_traces, axis=0)
+
+    average_traces[recording] = average_trace
+    #print(average_trace)
+
+    #print(recording, mean_traces.shape, average_trace.shape)
+
+# Plot all average recordings
+plt.figure()
+
+for recording, trace in average_traces.items():
+
+    t = np.arange(len(trace)) / fs / 60
+
+    plt.plot(t, trace, label=recording)
+
+plt.xlabel("Time [min]")
+plt.ylabel("Mean fluorescence [a.u.]")
+plt.title("Average fluorescence traces per recording")
+plt.legend()
+plt.show()
+
+#Mean trace mit und ohne ketamin
+
+#mean trace
+#CLOSEUP RECORDING
+import toolboxes.toolbox_nf as nf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import scipy
+import h5py
+
+data_path = "A:\\shared\\iyorulmaz\\Calcium_Imaging_Aufnahmen\\Tiff\\"
+close_name = "rec12_1_fish_50Vcm_32s_withketamine_2p5mm_closeup.(green).tif"
+aufnahme = nf.read_tif(data_path + close_name)
+
+mean_trace = []
+for im in aufnahme:
+    mean_trace.append(np.mean(im))
+
+plt.figure()
+plt.plot(mean_trace)
+plt.xlabel('Frames')
+plt.ylabel('mean fluorescence [a.u.]')
 plt.show()
